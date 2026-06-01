@@ -59,6 +59,10 @@ const HomeScreen = ({ navigation }) => {
   const [campussen, setCampussen] = useState([]);
   const [opleidingen, setOpleidingen] = useState([]);
   const [richtingen, setRichtingen] = useState([]);
+  const [productsLoading, setProductsLoading] = useState(true);
+  const [blogsLoading, setBlogsLoading] = useState(true);
+  const [campussenLoading, setCampussenLoading] = useState(true);
+  const [richtingenLoading, setRichtingenLoading] = useState(true);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProductCategory, setSelectedProductCategory] = useState("");
@@ -97,6 +101,9 @@ const HomeScreen = ({ navigation }) => {
       .catch((error) => {
         console.log("Product fetch error:", error);
         setProducts([]);
+      })
+      .finally(() => {
+        setProductsLoading(false);
       });
   }, []);
 
@@ -148,6 +155,9 @@ const HomeScreen = ({ navigation }) => {
       .catch((error) => {
         console.log("Blog fetch error:", error);
         setBlogs([]);
+      })
+      .finally(() => {
+        setBlogsLoading(false);
       });
   }, []);
 
@@ -173,6 +183,9 @@ const HomeScreen = ({ navigation }) => {
       .catch((error) => {
         console.log("Campussen fetch error:", error);
         setCampussen([]);
+      })
+      .finally(() => {
+        setCampussenLoading(false);
       });
   }, []);
 
@@ -220,6 +233,9 @@ const HomeScreen = ({ navigation }) => {
       .catch((error) => {
         console.log("Richtingen fetch error:", error);
         setRichtingen([]);
+      })
+      .finally(() => {
+        setRichtingenLoading(false);
       });
   }, []);
 
@@ -416,7 +432,13 @@ const HomeScreen = ({ navigation }) => {
 
       <Text style={styles.sectionTitle}>Studiezoeker</Text>
 
-      {filteredRichtingen.map((richting) => (
+      {richtingenLoading && <Text style={styles.message}>Richtingen laden...</Text>}
+
+      {!richtingenLoading && filteredRichtingen.length === 0 && (
+        <Text style={styles.message}>Geen richtingen gevonden.</Text>
+      )}
+
+      {!richtingenLoading && filteredRichtingen.map((richting) => (
         <RichtingCard
           key={richting.id}
           title={richting.title}
@@ -431,7 +453,13 @@ const HomeScreen = ({ navigation }) => {
       <Text style={styles.sectionTitle}>Producten</Text>
 
       <View style={styles.grid}>
-        {sortedProducts.map((product) => (
+        {productsLoading && <Text style={styles.message}>Producten laden...</Text>}
+
+        {!productsLoading && sortedProducts.length === 0 && (
+          <Text style={styles.message}>Geen producten gevonden.</Text>
+        )}
+
+        {!productsLoading && sortedProducts.map((product) => (
           <ProductCard
             key={product.id}
             title={product.title}
@@ -485,7 +513,13 @@ const HomeScreen = ({ navigation }) => {
             </Picker>
           </View>
 
-          {sortedBlogs.map((blog) => (
+          {blogsLoading && <Text style={styles.message}>Nieuws laden...</Text>}
+
+          {!blogsLoading && sortedBlogs.length === 0 && (
+            <Text style={styles.message}>Geen nieuws gevonden.</Text>
+          )}
+
+          {!blogsLoading && sortedBlogs.map((blog) => (
             <NewsCard
               key={blog.id}
               title={blog.title}
@@ -499,7 +533,13 @@ const HomeScreen = ({ navigation }) => {
 
       <Text style={styles.sectionTitle}>Campussen</Text>
 
-      {filteredCampussen.map((campus) => (
+      {campussenLoading && <Text style={styles.message}>Campussen laden...</Text>}
+
+      {!campussenLoading && filteredCampussen.length === 0 && (
+        <Text style={styles.message}>Geen campussen gevonden.</Text>
+      )}
+
+      {!campussenLoading && filteredCampussen.map((campus) => (
         <CampusCard
           key={campus.id}
           title={campus.title}
@@ -591,6 +631,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 15,
     marginTop: 10,
+  },
+
+  message: {
+    color: "#555",
+    backgroundColor: "#fff",
+    padding: 14,
+    borderRadius: 12,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#e1e4dc",
   },
 
   grid: {
