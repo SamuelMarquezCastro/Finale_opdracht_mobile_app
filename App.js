@@ -5,6 +5,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/HomeScreen";
 import ProductDetail from "./screens/ProductDetail";
 import BlogDetail from "./screens/BlogDetail";
+import CampusDetail from "./screens/CampusDetail";
+import SchoolGameScreen from "./screens/SchoolGameScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -28,7 +30,7 @@ export default function App() {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: "SportWear Store" }}
+          options={{ title: "STRIDE" }}
         />
 
         <Stack.Screen
@@ -41,6 +43,18 @@ export default function App() {
           name="BlogDetail"
           component={BlogDetail}
           options={{ title: "Blog" }}
+        />
+
+        <Stack.Screen
+          name="CampusDetail"
+          component={CampusDetail}
+          options={{ title: "Campus" }}
+        />
+
+        <Stack.Screen
+          name="SchoolGame"
+          component={SchoolGameScreen}
+          options={{ title: "School Game" }}
         />
       </Stack.Navigator>
     </NavigationContainer>
