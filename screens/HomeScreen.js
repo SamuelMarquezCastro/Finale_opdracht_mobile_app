@@ -320,7 +320,14 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <Text style={styles.title}>Busleyden Atheneum</Text>
+      <View style={styles.hero}>
+        <Text style={styles.badge}>BA Mechelen</Text>
+        <Text style={styles.title}>Vind jouw plek, kies jouw pad</Text>
+        <Text style={styles.subtitle}>
+          Ontdek producten, nieuws, campussen en studierichtingen van
+          Busleyden Atheneum.
+        </Text>
+      </View>
 
       <TextInput
         placeholder="Zoek producten, nieuws of campussen..."
@@ -527,47 +534,70 @@ const HomeScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#111",
+    backgroundColor: "#f4f5f0",
     padding: 20,
-    paddingTop: 60,
+    paddingTop: 24,
     flex: 1,
   },
 
-  title: {
-    color: "white",
-    fontSize: 30,
-    fontWeight: "bold",
-    textAlign: "center",
+  hero: {
+    backgroundColor: "#171717",
+    borderRadius: 18,
+    padding: 22,
     marginBottom: 20,
+  },
+
+  badge: {
+    color: "#b7e34a",
+    fontWeight: "bold",
+    marginBottom: 12,
+    textTransform: "uppercase",
+  },
+
+  title: {
+    color: "#fff",
+    fontSize: 32,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+
+  subtitle: {
+    color: "#d8d8d8",
+    fontSize: 15,
+    lineHeight: 22,
   },
 
   search: {
     backgroundColor: "white",
     padding: 12,
-    borderRadius: 10,
+    borderRadius: 12,
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#e1e4dc",
   },
 
   controlsCard: {
-    backgroundColor: "#1f1f1f",
+    backgroundColor: "#fff",
     borderRadius: 14,
-    padding: 12,
+    padding: 14,
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#e1e4dc",
   },
 
   controlLabel: {
-    color: "#fff",
+    color: "#171717",
     fontWeight: "bold",
     marginBottom: 6,
   },
 
   picker: {
-    backgroundColor: "white",
+    backgroundColor: "#f8f9f5",
     marginBottom: 20,
   },
 
   sectionTitle: {
-    color: "#fff",
+    color: "#171717",
     fontSize: 22,
     fontWeight: "bold",
     marginBottom: 15,
@@ -593,12 +623,12 @@ const styles = StyleSheet.create({
   },
 
   switchLabel: {
-    color: "#ccc",
+    color: "#555",
     marginRight: 8,
   },
 
   gameButton: {
-    backgroundColor: "#7aaa25",
+    backgroundColor: "#171717",
     padding: 15,
     borderRadius: 10,
     marginTop: 10,
@@ -613,16 +643,18 @@ const styles = StyleSheet.create({
   },
 
   studyCount: {
-    color: "#b7e34a",
+    color: "#668b18",
     fontWeight: "bold",
     marginBottom: 15,
   },
 
   richtingCard: {
-    backgroundColor: "#1c1c1c",
+    backgroundColor: "#fff",
     borderRadius: 14,
     overflow: "hidden",
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#e1e4dc",
   },
 
   richtingImage: {
@@ -636,25 +668,25 @@ const styles = StyleSheet.create({
   },
 
   richtingNiveau: {
-    color: "#b7e34a",
+    color: "#668b18",
     fontWeight: "bold",
     marginBottom: 6,
   },
 
   richtingTitle: {
-    color: "#fff",
+    color: "#171717",
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 8,
   },
 
   richtingMeta: {
-    color: "#ccc",
+    color: "#555",
     marginBottom: 4,
   },
 
   richtingText: {
-    color: "#aaa",
+    color: "#666",
     lineHeight: 20,
     marginTop: 8,
   },

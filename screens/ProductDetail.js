@@ -97,7 +97,7 @@ const ProductDetail = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#111",
+    backgroundColor: "#f4f5f0",
   },
 
   image: {
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   },
 
   category: {
-    color: "#aaa",
+    color: "#668b18",
     fontSize: 14,
     marginBottom: 8,
     textTransform: "uppercase",
@@ -119,21 +119,21 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    color: "#fff",
+    color: "#171717",
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 10,
   },
 
   price: {
-    color: "#00d09c",
+    color: "#668b18",
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 25,
   },
 
   sectionTitle: {
-    color: "#fff",
+    color: "#171717",
     fontSize: 18,
     fontWeight: "600",
     marginBottom: 10,
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
 
   description: {
-    color: "#ccc",
+    color: "#555",
     fontSize: 16,
     lineHeight: 24,
     marginBottom: 20,
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
 
   sizeButton: {
     borderWidth: 1,
-    borderColor: "#555",
+    borderColor: "#d8ddcf",
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 10,
@@ -162,18 +162,18 @@ const styles = StyleSheet.create({
   },
 
   selectedSizeButton: {
-    backgroundColor: "#fff",
-    borderColor: "#fff",
+    backgroundColor: "#171717",
+    borderColor: "#171717",
   },
 
   sizeText: {
-    color: "#fff",
+    color: "#171717",
     fontSize: 16,
     fontWeight: "600",
   },
 
   selectedSizeText: {
-    color: "#111",
+    color: "#fff",
   },
 
   quantityContainer: {
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: "#00d09c",
+    backgroundColor: "#b7e34a",
     width: 45,
     height: 45,
     borderRadius: 10,
@@ -198,21 +198,21 @@ const styles = StyleSheet.create({
   },
 
   quantityText: {
-    color: "#fff",
+    color: "#171717",
     fontSize: 20,
     fontWeight: "bold",
     marginHorizontal: 20,
   },
 
   totalPrice: {
-    color: "#fff",
+    color: "#171717",
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 25,
   },
 
   cartButton: {
-    backgroundColor: "#00d09c",
+    backgroundColor: "#171717",
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: "center",
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
   },
 
   cartButtonText: {
-    color: "#111",
+    color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
   },

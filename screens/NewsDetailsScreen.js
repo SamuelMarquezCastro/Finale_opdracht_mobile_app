@@ -39,7 +39,7 @@ const NewsDetailsScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#111",
+    backgroundColor: "#f4f5f0",
   },
 
   image: {
@@ -53,27 +53,27 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    color: "#fff",
+    color: "#171717",
     fontSize: 28,
     fontWeight: "bold",
     marginBottom: 10,
   },
 
   meta: {
-    color: "#aaa",
+    color: "#668b18",
     fontSize: 14,
     marginBottom: 20,
   },
 
   sectionTitle: {
-    color: "#fff",
+    color: "#171717",
     fontSize: 18,
     fontWeight: "600",
     marginBottom: 12,
   },
 
   text: {
-    color: "#ccc",
+    color: "#555",
     fontSize: 16,
     lineHeight: 26,
   },

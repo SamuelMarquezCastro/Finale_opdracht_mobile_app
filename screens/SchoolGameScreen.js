@@ -112,11 +112,11 @@ export default function SchoolGameScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#111",
+    backgroundColor: "#f4f5f0",
   },
 
   title: {
-    color: "#fff",
+    color: "#171717",
     textAlign: "center",
     marginTop: 40,
     fontSize: 28,
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   },
 
   info: {
-    color: "#fff",
+    color: "#171717",
     textAlign: "center",
     fontSize: 20,
     marginBottom: 10,
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   },
 
   gameOver: {
-    color: "#fff",
+    color: "#171717",
     textAlign: "center",
     fontSize: 26,
     fontWeight: "bold",
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   },
 
   finalScore: {
-    color: "#fff",
+    color: "#171717",
     textAlign: "center",
     fontSize: 22,
     marginTop: 15,
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   restartButton: {
     alignSelf: "center",
     marginTop: 25,
-    backgroundColor: "#b7e34a",
+    backgroundColor: "#171717",
     padding: 15,
     minWidth: 180,
     borderRadius: 10,
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
 
   restartText: {
     textAlign: "center",
-    color: "#111",
+    color: "#fff",
     fontWeight: "bold",
     fontSize: 18,
   },

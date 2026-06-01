@@ -21,11 +21,13 @@ const CampusCard = ({ title, description, image, onPress }) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#1c1c1c",
+    backgroundColor: "#fff",
     borderRadius: 14,
     overflow: "hidden",
     marginBottom: 20,
     width: "100%",
+    borderWidth: 1,
+    borderColor: "#e1e4dc",
   },
 
   image: {
@@ -35,7 +37,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    color: "#fff",
+    color: "#171717",
     fontSize: 20,
     fontWeight: "bold",
     margin: 14,
@@ -43,7 +45,7 @@ const styles = StyleSheet.create({
   },
 
   description: {
-    color: "#bbb",
+    color: "#666",
     fontSize: 14,
     lineHeight: 20,
     marginHorizontal: 14,
@@ -56,7 +58,7 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
-    color: "#b7e34a",
+    color: "#668b18",
     fontSize: 16,
     fontWeight: "700",
   },

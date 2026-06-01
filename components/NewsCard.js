@@ -28,11 +28,13 @@ const NewsCard = ({ title, image, excerpt, compact = false, onPress }) => {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: "#1c1c1c",
+    backgroundColor: "#fff",
     borderRadius: 14,
     overflow: "hidden",
     marginBottom: 20,
     width: "100%",
+    borderWidth: 1,
+    borderColor: "#e1e4dc",
   },
 
   image: {
@@ -46,14 +48,14 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    color: "#fff",
+    color: "#171717",
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 8,
   },
 
   excerpt: {
-    color: "#bbb",
+    color: "#666",
     fontSize: 14,
     lineHeight: 20,
   },

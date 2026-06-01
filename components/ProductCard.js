@@ -31,11 +31,13 @@ export default function ProductCard({ title, description, price, image, onPress 
 const styles = StyleSheet.create({
 
   card: {
-    backgroundColor: "#1f1f1f",
+    backgroundColor: "#fff",
     padding: 15,
     borderRadius: 12,
     width: 160,
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#e1e4dc",
   },
 
   image: {
@@ -46,33 +48,33 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    color: "white",
+    color: "#171717",
     fontWeight: "bold",
     fontSize: 15,
     marginBottom: 5,
   },
 
   description: {
-    color: "#bbb",
+    color: "#666",
     fontSize: 12,
     lineHeight: 16,
     marginBottom: 8,
   },
 
   price: {
-    color: "#00ff9c",
+    color: "#668b18",
     fontWeight: "bold",
     marginBottom: 10,
   },
 
   button: {
-    backgroundColor: "#175b80",
+    backgroundColor: "#b7e34a",
     padding: 10,
     borderRadius: 8,
   },
 
   buttonText: {
-    color: "white",
+    color: "#171717",
     textAlign: "center",
     fontWeight: "bold",
   },

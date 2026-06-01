@@ -28,7 +28,7 @@ const CampusDetail = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#111",
+    backgroundColor: "#f4f5f0",
   },
 
   content: {
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    color: "#fff",
+    color: "#171717",
     fontSize: 28,
     fontWeight: "bold",
     marginTop: 20,
@@ -51,14 +51,14 @@ const styles = StyleSheet.create({
   },
 
   address: {
-    color: "#b7e34a",
+    color: "#668b18",
     fontSize: 16,
     marginHorizontal: 20,
     marginBottom: 20,
   },
 
   body: {
-    color: "#ccc",
+    color: "#555",
     fontSize: 16,
     lineHeight: 25,
     marginHorizontal: 20,
