@@ -5,7 +5,6 @@ import {
   Switch,
   View,
   Text,
-  Image,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -15,6 +14,7 @@ import {
 import ProductCard from "../components/ProductCard";
 import NewsCard from "../components/NewsCard";
 import CampusCard from "../components/CampusCard";
+import RichtingCard from "../components/RichtingCard";
 import { Picker } from "@react-native-picker/picker";
 
 const apiToken =
@@ -417,26 +417,15 @@ const HomeScreen = ({ navigation }) => {
       <Text style={styles.sectionTitle}>Studiezoeker</Text>
 
       {filteredRichtingen.map((richting) => (
-        <View key={richting.id} style={styles.richtingCard}>
-          {richting.image && (
-            <Image source={{ uri: richting.image }} style={styles.richtingImage} />
-          )}
-          <View style={styles.richtingContent}>
-            <Text style={styles.richtingNiveau}>
-              {niveauNames[richting.niveau] || "Niveau onbekend"}
-            </Text>
-            <Text style={styles.richtingTitle}>{richting.title}</Text>
-            <Text style={styles.richtingMeta}>
-              {getCampusName(richting.campus)}
-            </Text>
-            <Text style={styles.richtingMeta}>
-              {getOpleidingNames(richting.opleidingen)}
-            </Text>
-            <Text style={styles.richtingText} numberOfLines={3}>
-              {richting.description}
-            </Text>
-          </View>
-        </View>
+        <RichtingCard
+          key={richting.id}
+          title={richting.title}
+          description={richting.description}
+          image={richting.image}
+          campus={getCampusName(richting.campus)}
+          opleiding={getOpleidingNames(richting.opleidingen)}
+          niveau={niveauNames[richting.niveau] || "Niveau onbekend"}
+        />
       ))}
 
       <Text style={styles.sectionTitle}>Producten</Text>
@@ -648,48 +637,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
 
-  richtingCard: {
-    backgroundColor: "#fff",
-    borderRadius: 14,
-    overflow: "hidden",
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "#e1e4dc",
-  },
-
-  richtingImage: {
-    width: "100%",
-    height: 170,
-    resizeMode: "cover",
-  },
-
-  richtingContent: {
-    padding: 14,
-  },
-
-  richtingNiveau: {
-    color: "#668b18",
-    fontWeight: "bold",
-    marginBottom: 6,
-  },
-
-  richtingTitle: {
-    color: "#171717",
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-
-  richtingMeta: {
-    color: "#555",
-    marginBottom: 4,
-  },
-
-  richtingText: {
-    color: "#666",
-    lineHeight: 20,
-    marginTop: 8,
-  },
 });
 
 export default HomeScreen;
