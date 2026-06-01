@@ -466,6 +466,7 @@ const HomeScreen = ({ navigation }) => {
             description={product.description}
             price={product.price}
             image={product.image}
+            category={getProductCategoryName(product.category)}
             onPress={() =>
               navigation.navigate("Details", {
                 ...product,

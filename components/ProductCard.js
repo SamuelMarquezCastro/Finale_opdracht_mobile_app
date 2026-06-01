@@ -2,7 +2,14 @@ import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
 
-export default function ProductCard({ title, description, price, image, onPress }) {
+export default function ProductCard({
+  title,
+  description,
+  price,
+  image,
+  category,
+  onPress,
+}) {
   const imageSource = image
     ? { uri: image }
     : { uri: "https://via.placeholder.com/300x300?text=Geen+afbeelding" };
@@ -15,6 +22,7 @@ export default function ProductCard({ title, description, price, image, onPress 
         style={styles.image}
       />
 
+      <Text style={styles.category}>{category}</Text>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.description} numberOfLines={2}>
         {description}
@@ -52,6 +60,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 15,
     marginBottom: 5,
+  },
+
+  category: {
+    color: "#668b18",
+    fontSize: 11,
+    fontWeight: "bold",
+    marginBottom: 6,
+    textTransform: "uppercase",
   },
 
   description: {
