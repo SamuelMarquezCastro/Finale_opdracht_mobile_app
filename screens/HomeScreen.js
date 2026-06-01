@@ -5,6 +5,7 @@ import {
   Switch,
   View,
   Text,
+  Image,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -29,6 +30,8 @@ const campussenUrl =
   "https://api.webflow.com/v2/collections/6a1b4ace78c306601d5c476f/items";
 const opleidingenUrl =
   "https://api.webflow.com/v2/collections/6a1b4b459165c2dad250f542/items";
+const richtingenUrl =
+  "https://api.webflow.com/v2/collections/6a1db85ef1448301de9c9728/items";
 
 const categoryNamesBlogs = {
   "": "Alle categorieën",
@@ -36,6 +39,14 @@ const categoryNamesBlogs = {
   "6875845ff787112248a028818b549c9d": "Schoolnieuws",
   bc756b09c087e7cc5ab0ee7097497dfc: "Campus",
   d218cb58c75cc8892196e210e9ca40ff: "Groei",
+};
+
+const niveauNames = {
+  "": "Alle graden",
+  "96b704dadf2092bb9d7a616aa38513f1": "1ste graad",
+  df4a1e4cca1265140b84f40f87e2384c: "2de graad",
+  "491fb3a5ce2320cc12bc176051653e46": "3de jaar",
+  "665f8fd27288ddc43b2d3f5c6fc96389": "7de jaar",
 };
 
 const stripHtml = (html) =>
@@ -47,11 +58,14 @@ const HomeScreen = ({ navigation }) => {
   const [blogs, setBlogs] = useState([]);
   const [campussen, setCampussen] = useState([]);
   const [opleidingen, setOpleidingen] = useState([]);
+  const [richtingen, setRichtingen] = useState([]);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProductCategory, setSelectedProductCategory] = useState("");
   const [selectedBlogCategory, setSelectedBlogCategory] = useState("");
   const [selectedOpleiding, setSelectedOpleiding] = useState("");
+  const [selectedCampus, setSelectedCampus] = useState("");
+  const [selectedNiveau, setSelectedNiveau] = useState("");
   const [sortOption, setSortOption] = useState("price-asc");
   const [blogSortOption, setBlogSortOption] = useState("date-desc");
   const [showBlogs, setShowBlogs] = useState(true);
@@ -183,6 +197,32 @@ const HomeScreen = ({ navigation }) => {
       });
   }, []);
 
+  useEffect(() => {
+    fetch(richtingenUrl, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setRichtingen(
+          (data.items || []).map((item) => ({
+            id: item.id,
+            title: item.fieldData.name,
+            description: stripHtml(item.fieldData.beschrijving),
+            image: item.fieldData.image?.url || null,
+            campus: item.fieldData.campus || "",
+            opleidingen: item.fieldData.opleidingen || [],
+            niveau: item.fieldData.niveau || "",
+          })),
+        );
+      })
+      .catch((error) => {
+        console.log("Richtingen fetch error:", error);
+        setRichtingen([]);
+      });
+  }, []);
+
   const getProductCategoryName = (categoryId) => {
     const productCategory = productCategories.find(
       (category) => category.id === categoryId,
@@ -200,6 +240,22 @@ const HomeScreen = ({ navigation }) => {
             id: category,
             name: category,
           }));
+
+  const getCampusName = (campusId) => {
+    const campus = campussen.find((item) => item.id === campusId);
+
+    return campus?.title || "Campus onbekend";
+  };
+
+  const getOpleidingNames = (opleidingIds) =>
+    opleidingIds
+      .map((opleidingId) => {
+        const opleiding = opleidingen.find((item) => item.id === opleidingId);
+
+        return opleiding?.name;
+      })
+      .filter(Boolean)
+      .join(", ");
 
   const filteredProducts = products.filter(
     (product) =>
@@ -242,11 +298,22 @@ const HomeScreen = ({ navigation }) => {
         campus.opleidingen.includes(selectedOpleiding)),
   );
 
+  const filteredRichtingen = richtingen.filter(
+    (richting) =>
+      richting.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      (selectedOpleiding === "" ||
+        richting.opleidingen.includes(selectedOpleiding)) &&
+      (selectedCampus === "" || richting.campus === selectedCampus) &&
+      (selectedNiveau === "" || richting.niveau === selectedNiveau),
+  );
+
   const resetFilters = () => {
     setSearchQuery("");
     setSelectedProductCategory("");
     setSelectedBlogCategory("");
     setSelectedOpleiding("");
+    setSelectedCampus("");
+    setSelectedNiveau("");
     setSortOption("price-asc");
     setBlogSortOption("date-desc");
   };
@@ -308,8 +375,62 @@ const HomeScreen = ({ navigation }) => {
           ))}
         </Picker>
 
+        <Picker
+          selectedValue={selectedCampus}
+          onValueChange={setSelectedCampus}
+          style={styles.picker}
+        >
+          <Picker.Item label="Alle campussen" value="" />
+          {campussen.map((campus) => (
+            <Picker.Item
+              key={campus.id}
+              label={campus.title}
+              value={campus.id}
+            />
+          ))}
+        </Picker>
+
+        <Picker
+          selectedValue={selectedNiveau}
+          onValueChange={setSelectedNiveau}
+          style={styles.picker}
+        >
+          {Object.entries(niveauNames).map(([id, name]) => (
+            <Picker.Item key={id || "all"} label={name} value={id} />
+          ))}
+        </Picker>
+
+        <Text style={styles.studyCount}>
+          {filteredRichtingen.length} richtingen gevonden
+        </Text>
+
         <Button title="Reset filters" color="#7aaa25" onPress={resetFilters} />
       </View>
+
+      <Text style={styles.sectionTitle}>Studiezoeker</Text>
+
+      {filteredRichtingen.map((richting) => (
+        <View key={richting.id} style={styles.richtingCard}>
+          {richting.image && (
+            <Image source={{ uri: richting.image }} style={styles.richtingImage} />
+          )}
+          <View style={styles.richtingContent}>
+            <Text style={styles.richtingNiveau}>
+              {niveauNames[richting.niveau] || "Niveau onbekend"}
+            </Text>
+            <Text style={styles.richtingTitle}>{richting.title}</Text>
+            <Text style={styles.richtingMeta}>
+              {getCampusName(richting.campus)}
+            </Text>
+            <Text style={styles.richtingMeta}>
+              {getOpleidingNames(richting.opleidingen)}
+            </Text>
+            <Text style={styles.richtingText} numberOfLines={3}>
+              {richting.description}
+            </Text>
+          </View>
+        </View>
+      ))}
 
       <Text style={styles.sectionTitle}>Producten</Text>
 
@@ -489,6 +610,53 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     fontSize: 18,
+  },
+
+  studyCount: {
+    color: "#b7e34a",
+    fontWeight: "bold",
+    marginBottom: 15,
+  },
+
+  richtingCard: {
+    backgroundColor: "#1c1c1c",
+    borderRadius: 14,
+    overflow: "hidden",
+    marginBottom: 20,
+  },
+
+  richtingImage: {
+    width: "100%",
+    height: 170,
+    resizeMode: "cover",
+  },
+
+  richtingContent: {
+    padding: 14,
+  },
+
+  richtingNiveau: {
+    color: "#b7e34a",
+    fontWeight: "bold",
+    marginBottom: 6,
+  },
+
+  richtingTitle: {
+    color: "#fff",
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+
+  richtingMeta: {
+    color: "#ccc",
+    marginBottom: 4,
+  },
+
+  richtingText: {
+    color: "#aaa",
+    lineHeight: 20,
+    marginTop: 8,
   },
 });
 
