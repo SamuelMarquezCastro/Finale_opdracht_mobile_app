@@ -8,143 +8,218 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
+  TouchableOpacity,
 } from "react-native";
 
 import ProductCard from "../components/ProductCard";
 import BlogCard from "../components/BlogCard";
+import CampusCard from "../components/CampusCard";
 import { Picker } from "@react-native-picker/picker";
 
-const categoryNames = {
-  "": "alle categorieën",
-  "699f04d48786422f5c2b343a": "Tshirt",
-  "699ef99797a5763ef1998039": "Blogs",
+const apiToken =
+  "2e8b77f9d96fe249aa8a2fbcda35c56f33d458b2f3680b570ced3632bcd19128";
+
+const productsUrl =
+  "https://api.webflow.com/v2/sites/6a1b498850c42c92a376634e/products";
+const blogsUrl =
+  "https://api.webflow.com/v2/collections/6a1b5077d9dab01e9054f1a1/items";
+const campussenUrl =
+  "https://api.webflow.com/v2/collections/6a1b4ace78c306601d5c476f/items";
+const opleidingenUrl =
+  "https://api.webflow.com/v2/collections/6a1b4b459165c2dad250f542/items";
+
+const categoryNamesBlogs = {
+  "": "Alle categorieën",
+  "22e6c656444b40674181cac0b8de0ef7": "Activiteit",
+  "6875845ff787112248a028818b549c9d": "Schoolnieuws",
+  bc756b09c087e7cc5ab0ee7097497dfc: "Campus",
+  d218cb58c75cc8892196e210e9ca40ff: "Groei",
 };
 
-const apiToken = "326809b6a1dd0d44ae83c6adacd81c9dee1bcb46deefa3ef83b9c6009d878362";
-const productsUrl = "https://api.webflow.com/v2/sites/698c7fb73c82c1b0af609e04/products";
-const blogsUrl = "https://api.webflow.com/v2/collections/699ef90b409ea29bfc51f28a/items";
-
 const stripHtml = (html) =>
-  html
-    ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim()
-    : "";
+  html ? html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() : "";
 
 const HomeScreen = ({ navigation }) => {
-  const [compactBlogs, setCompactBlogs] = useState(false);
   const [products, setProducts] = useState([]);
   const [blogs, setBlogs] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [campussen, setCampussen] = useState([]);
+  const [opleidingen, setOpleidingen] = useState([]);
+
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedProductCategory, setSelectedProductCategory] = useState("");
+  const [selectedBlogCategory, setSelectedBlogCategory] = useState("");
+  const [selectedOpleiding, setSelectedOpleiding] = useState("");
   const [sortOption, setSortOption] = useState("price-asc");
-
-  const fetchBlogs = () => {
-    fetch(`${blogsUrl}?cache=${Date.now()}`, {
-      headers: {
-        authorization: apiToken,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        const apiBlogs = data.items.map((item) => ({
-          id: item.id,
-          title: item.fieldData.name,
-          excerpt:
-            item.fieldData["post-summary"] ||
-            "Geen korte beschrijving beschikbaar.",
-          image:
-            item.fieldData["thumbnail-image"]?.url ||
-            item.fieldData["main-image"]?.url ||
-            null,
-          content:
-            stripHtml(item.fieldData["post-body"]) ||
-            item.fieldData["post-summary"] ||
-            "Geen inhoud beschikbaar.",
-          author: "SportWear Store",
-          date: new Date(item.createdOn).toLocaleDateString("nl-BE"),
-        }));
-
-        setBlogs(apiBlogs);
-      })
-      .catch((error) => {
-        console.log("Blog fetch error:", error);
-        setBlogs([]);
-      });
-  };
-
+  const [blogSortOption, setBlogSortOption] = useState("date-desc");
+  const [showBlogs, setShowBlogs] = useState(true);
 
   useEffect(() => {
     fetch(productsUrl, {
       headers: {
-        authorization: apiToken,
+        Authorization: `Bearer ${apiToken}`,
       },
     })
       .then((res) => res.json())
       .then((data) => {
         setProducts(
-          data.items.map((item) => ({
+          (data.items || []).map((item) => ({
             id: item.product.id,
             title: item.product.fieldData.name,
-            subtitle: item.product.fieldData.description,
+            description:
+              item.product.fieldData.description ||
+              "Geen beschrijving beschikbaar.",
             price: Number(item.skus[0]?.fieldData?.price?.value ?? 0) / 100,
             image:
               item.product.fieldData?.["main-image"]?.url ||
               item.skus[0]?.fieldData?.["main-image"]?.url ||
               null,
             category:
-              categoryNames[item.product.fieldData?.category?.[0]] ||
-              "Onbekende categorie",
-            description:
-              item.product.fieldData?.description ||
-              "Geen beschrijving beschikbaar.",
+              item.product.fieldData?.category?.[0] || "Geen categorie",
           })),
         );
       })
       .catch((error) => {
-        console.log("Fetch error:", error);
+        console.log("Product fetch error:", error);
+        setProducts([]);
       });
   }, []);
 
   useEffect(() => {
-    fetchBlogs();
+    fetch(blogsUrl, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setBlogs(
+          (data.items || []).map((item) => ({
+            id: item.id,
+            title: item.fieldData.name,
+            intro: item.fieldData.intro || "Geen intro beschikbaar.",
+            image: item.fieldData.image?.url || null,
+            date: new Date(item.fieldData.datum).toLocaleDateString("nl-BE"),
+            dateRaw: item.fieldData.datum,
+            category:
+              categoryNamesBlogs[item.fieldData.categories] ||
+              "Onbekende categorie",
+            content:
+              stripHtml(item.fieldData.inhoud) || "Geen inhoud beschikbaar.",
+          })),
+        );
+      })
+      .catch((error) => {
+        console.log("Blog fetch error:", error);
+        setBlogs([]);
+      });
   }, []);
+
+  useEffect(() => {
+    fetch(campussenUrl, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setCampussen(
+          (data.items || []).map((item) => ({
+            id: item.id,
+            title: item.fieldData.name,
+            address: item.fieldData.adres,
+            image: item.fieldData.afbeelding?.url || null,
+            content: item.fieldData.beschrijving,
+            opleidingen: item.fieldData.opleidingen || [],
+          })),
+        );
+      })
+      .catch((error) => {
+        console.log("Campussen fetch error:", error);
+        setCampussen([]);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch(opleidingenUrl, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setOpleidingen(
+          (data.items || []).map((item) => ({
+            id: item.id,
+            name: item.fieldData.name,
+          })),
+        );
+      })
+      .catch((error) => {
+        console.log("Opleidingen fetch error:", error);
+        setOpleidingen([]);
+      });
+  }, []);
+
+  const productCategories = [
+    ...new Set(products.map((product) => product.category)),
+  ];
 
   const filteredProducts = products.filter(
     (product) =>
-      (selectedCategory === "" || product.category === selectedCategory) &&
+      (selectedProductCategory === "" ||
+        product.category === selectedProductCategory) &&
       product.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-
   const sortedProducts = [...filteredProducts].sort((a, b) => {
-    if (sortOption === "price-asc") {
-      return a.price - b.price;
-    }
-    if (sortOption === "price-desc") {
-      return b.price - a.price;
-    }
-    if (sortOption === "name-asc") {
-      return a.title.localeCompare(b.title);
-    }
-    if (sortOption === "name-desc") {
-      return b.title.localeCompare(a.title);
-    }
+    if (sortOption === "price-asc") return a.price - b.price;
+    if (sortOption === "price-desc") return b.price - a.price;
+    if (sortOption === "name-asc") return a.title.localeCompare(b.title);
+    if (sortOption === "name-desc") return b.title.localeCompare(a.title);
     return 0;
-  }
-  );  
+  });
+
+  const filteredBlogs = blogs.filter(
+    (blog) =>
+      blog.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      (selectedBlogCategory === "" ||
+        blog.category === selectedBlogCategory),
+  );
+
+  const sortedBlogs = [...filteredBlogs].sort((a, b) => {
+    if (blogSortOption === "date-desc") {
+      return new Date(b.dateRaw) - new Date(a.dateRaw);
+    }
+    if (blogSortOption === "date-asc") {
+      return new Date(a.dateRaw) - new Date(b.dateRaw);
+    }
+    if (blogSortOption === "name-asc") return a.title.localeCompare(b.title);
+    if (blogSortOption === "name-desc") return b.title.localeCompare(a.title);
+    return 0;
+  });
+
+  const filteredCampussen = campussen.filter(
+    (campus) =>
+      campus.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      (selectedOpleiding === "" ||
+        campus.opleidingen.includes(selectedOpleiding)),
+  );
 
   const resetFilters = () => {
     setSearchQuery("");
-    setSelectedCategory("");
+    setSelectedProductCategory("");
+    setSelectedBlogCategory("");
+    setSelectedOpleiding("");
     setSortOption("price-asc");
+    setBlogSortOption("date-desc");
   };
-
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <Text style={styles.title}>SportWear Store</Text>
+      <Text style={styles.title}>Busleyden Atheneum</Text>
 
       <TextInput
-        placeholder="Zoek sportkleding..."
+        placeholder="Zoek producten, nieuws of campussen..."
         placeholderTextColor="#666"
         style={styles.search}
         value={searchQuery}
@@ -152,33 +227,50 @@ const HomeScreen = ({ navigation }) => {
       />
 
       <View style={styles.controlsCard}>
-        <Text style={styles.controlLabel}>Categorie</Text>
-      <Picker
-        selectedValue={selectedCategory}
-        onValueChange={setSelectedCategory}
-        style={styles.picker}
-      >
-        <Picker.Item label="Alle categorieën" value="" />
-        <Picker.Item label="Tshirt" value="Tshirt" />
-        <Picker.Item label="Blogs" value="Blogs" />
-      </Picker>
+        <Text style={styles.controlLabel}>Productcategorie</Text>
+        <Picker
+          selectedValue={selectedProductCategory}
+          onValueChange={setSelectedProductCategory}
+          style={styles.picker}
+        >
+          <Picker.Item label="Alle categorieën" value="" />
+          {productCategories.map((category) => (
+            <Picker.Item key={category} label={category} value={category} />
+          ))}
+        </Picker>
 
-        <Text style={styles.controlLabel}>Sorteren</Text>
-      <Picker
-        selectedValue={sortOption}
-        onValueChange={setSortOption}
-        style={styles.picker}
-      >
-        <Picker.Item label="Prijs: Laag naar Hoog" value="price-asc" />  
-        <Picker.Item label="Prijs: Hoog naar Laag" value="price-desc" />
-        <Picker.Item label="Naam: A-Z" value="name-asc" /> 
-        <Picker.Item label="Naam: Z-A" value="name-desc" />
-      </Picker>
+        <Text style={styles.controlLabel}>Producten sorteren</Text>
+        <Picker
+          selectedValue={sortOption}
+          onValueChange={setSortOption}
+          style={styles.picker}
+        >
+          <Picker.Item label="Prijs: Laag naar Hoog" value="price-asc" />
+          <Picker.Item label="Prijs: Hoog naar Laag" value="price-desc" />
+          <Picker.Item label="Naam: A-Z" value="name-asc" />
+          <Picker.Item label="Naam: Z-A" value="name-desc" />
+        </Picker>
 
-        <Button title="Reset filters" color="#ff3c38" onPress={resetFilters} />
+        <Text style={styles.controlLabel}>Studiezoeker</Text>
+        <Picker
+          selectedValue={selectedOpleiding}
+          onValueChange={setSelectedOpleiding}
+          style={styles.picker}
+        >
+          <Picker.Item label="Alle opleidingen" value="" />
+          {opleidingen.map((opleiding) => (
+            <Picker.Item
+              key={opleiding.id}
+              label={opleiding.name}
+              value={opleiding.id}
+            />
+          ))}
+        </Picker>
+
+        <Button title="Reset filters" color="#7aaa25" onPress={resetFilters} />
       </View>
 
-      <Text style={styles.sectionTitle}>Populaire producten</Text>
+      <Text style={styles.sectionTitle}>Producten</Text>
 
       <View style={styles.grid}>
         {sortedProducts.map((product) => (
@@ -188,45 +280,78 @@ const HomeScreen = ({ navigation }) => {
             description={product.description}
             price={product.price}
             image={product.image}
-            onPress={() =>
-              navigation.navigate("Details", {
-                title: product.title,
-                description: product.description,
-                price: product.price,
-                image: product.image,
-                category: product.category,
-              })
-            }
+            onPress={() => navigation.navigate("Details", product)}
           />
         ))}
       </View>
 
       <View style={styles.switchRow}>
-        <Text style={styles.sectionTitle}>Blogs</Text>
+        <Text style={styles.sectionTitle}>Nieuws</Text>
         <View style={styles.switchControl}>
-          <Text style={styles.switchLabel}>Compact</Text>
-          <Switch value={compactBlogs} onValueChange={setCompactBlogs} />
+          <Text style={styles.switchLabel}>Toon nieuws</Text>
+          <Switch value={showBlogs} onValueChange={setShowBlogs} />
         </View>
       </View>
 
-      {blogs.map((blog) => (
-        <BlogCard
-          key={blog.id}
-          title={blog.title}
-          image={blog.image}
-          excerpt={blog.excerpt}
-          compact={compactBlogs}
-          onPress={() =>
-            navigation.navigate("BlogDetail", {
-              title: blog.title,
-              image: blog.image,
-              author: blog.author,
-              date: blog.date,
-              content: blog.content,
-            })
-          }
+      {showBlogs && (
+        <>
+          <View style={styles.controlsCard}>
+            <Text style={styles.controlLabel}>Nieuwscategorie</Text>
+            <Picker
+              selectedValue={selectedBlogCategory}
+              onValueChange={setSelectedBlogCategory}
+              style={styles.picker}
+            >
+              <Picker.Item label="Alle categorieën" value="" />
+              <Picker.Item label="Activiteit" value="Activiteit" />
+              <Picker.Item label="Schoolnieuws" value="Schoolnieuws" />
+              <Picker.Item label="Campus" value="Campus" />
+              <Picker.Item label="Groei" value="Groei" />
+            </Picker>
+
+            <Text style={styles.controlLabel}>Nieuws sorteren</Text>
+            <Picker
+              selectedValue={blogSortOption}
+              onValueChange={setBlogSortOption}
+              style={styles.picker}
+            >
+              <Picker.Item label="Nieuwste eerst" value="date-desc" />
+              <Picker.Item label="Oudste eerst" value="date-asc" />
+              <Picker.Item label="Naam: A-Z" value="name-asc" />
+              <Picker.Item label="Naam: Z-A" value="name-desc" />
+            </Picker>
+          </View>
+
+          {sortedBlogs.map((blog) => (
+            <BlogCard
+              key={blog.id}
+              title={blog.title}
+              image={blog.image}
+              excerpt={blog.intro}
+              onPress={() => navigation.navigate("BlogDetail", blog)}
+            />
+          ))}
+        </>
+      )}
+
+      <Text style={styles.sectionTitle}>Campussen</Text>
+
+      {filteredCampussen.map((campus) => (
+        <CampusCard
+          key={campus.id}
+          title={campus.title}
+          description={campus.address}
+          image={campus.image}
+          onPress={() => navigation.navigate("CampusDetail", campus)}
         />
       ))}
+
+      <TouchableOpacity
+        style={styles.gameButton}
+        onPress={() => navigation.navigate("SchoolGame")}
+      >
+        <Text style={styles.gameButtonText}>Speel de School Game</Text>
+      </TouchableOpacity>
 
       <StatusBar style="light" />
     </ScrollView>
@@ -303,6 +428,21 @@ const styles = StyleSheet.create({
   switchLabel: {
     color: "#ccc",
     marginRight: 8,
+  },
+
+  gameButton: {
+    backgroundColor: "#7aaa25",
+    padding: 15,
+    borderRadius: 10,
+    marginTop: 10,
+    marginBottom: 40,
+  },
+
+  gameButtonText: {
+    color: "#fff",
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 18,
   },
 });
 

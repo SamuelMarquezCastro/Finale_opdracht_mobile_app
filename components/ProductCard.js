@@ -19,7 +19,7 @@ export default function ProductCard({ title, description, price, image, onPress 
       <Text style={styles.description} numberOfLines={2}>
         {description}
       </Text>
-      <Text style={styles.price}>{price}</Text>
+      <Text style={styles.price}>€{Number(price).toFixed(2)}</Text>
       <TouchableOpacity style={styles.button} onPress={onPress}>
         <Text style={styles.buttonText}>Bekijk</Text>
       </TouchableOpacity>
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: "#ff3c38",
+    backgroundColor: "#175b80",
     padding: 10,
     borderRadius: 8,
   },

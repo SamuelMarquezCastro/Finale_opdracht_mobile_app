@@ -13,7 +13,7 @@ const BlogDetail = ({ route }) => {
     title = "Blog",
     image = "https://via.placeholder.com/800x400?text=Geen+afbeelding",
     content = "Geen inhoud beschikbaar.",
-    author = "SportWear Store",
+    author = "Busleyden Atheneum",
     date = "",
   } = route.params ?? {};
 
