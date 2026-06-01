@@ -12,7 +12,7 @@ import {
 } from "react-native";
 
 import ProductCard from "../components/ProductCard";
-import BlogCard from "../components/BlogCard";
+import NewsCard from "../components/NewsCard";
 import CampusCard from "../components/CampusCard";
 import { Picker } from "@react-native-picker/picker";
 
@@ -369,12 +369,12 @@ const HomeScreen = ({ navigation }) => {
           </View>
 
           {sortedBlogs.map((blog) => (
-            <BlogCard
+            <NewsCard
               key={blog.id}
               title={blog.title}
               image={blog.image}
               excerpt={blog.intro}
-              onPress={() => navigation.navigate("BlogDetail", blog)}
+              onPress={() => navigation.navigate("NewsDetails", blog)}
             />
           ))}
         </>

@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from "react-native";
 
-const BlogCard = ({ title, image, excerpt, compact = false, onPress }) => {
+const NewsCard = ({ title, image, excerpt, compact = false, onPress }) => {
   const imageSource = image
     ? { uri: image }
     : { uri: "https://via.placeholder.com/600x300?text=Geen+afbeelding" };
@@ -59,4 +59,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BlogCard;
+export default NewsCard;

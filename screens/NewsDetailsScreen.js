@@ -8,9 +8,9 @@ import {
   StyleSheet,
 } from "react-native";
 
-const BlogDetail = ({ route }) => {
+const NewsDetailsScreen = ({ route }) => {
   const {
-    title = "Blog",
+    title = "Nieuws",
     image = "https://via.placeholder.com/800x400?text=Geen+afbeelding",
     content = "Geen inhoud beschikbaar.",
     author = "Busleyden Atheneum",
@@ -79,4 +79,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BlogDetail;
+export default NewsDetailsScreen;

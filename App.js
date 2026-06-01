@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import HomeScreen from "./screens/HomeScreen";
 import ProductDetail from "./screens/ProductDetail";
-import BlogDetail from "./screens/BlogDetail";
+import NewsDetailsScreen from "./screens/NewsDetailsScreen";
 import CampusDetail from "./screens/CampusDetail";
 import SchoolGameScreen from "./screens/SchoolGameScreen";
 
@@ -30,7 +30,7 @@ export default function App() {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: "STRIDE" }}
+          options={{ title: "Busleyden Atheneum" }}
         />
 
         <Stack.Screen
@@ -40,9 +40,9 @@ export default function App() {
         />
 
         <Stack.Screen
-          name="BlogDetail"
-          component={BlogDetail}
-          options={{ title: "Blog" }}
+          name="NewsDetails"
+          component={NewsDetailsScreen}
+          options={{ title: "Nieuws" }}
         />
 
         <Stack.Screen
