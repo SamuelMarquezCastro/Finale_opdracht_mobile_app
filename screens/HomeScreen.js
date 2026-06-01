@@ -21,6 +21,8 @@ const apiToken =
 
 const productsUrl =
   "https://api.webflow.com/v2/sites/6a1b498850c42c92a376634e/products";
+const productCategoriesUrl =
+  "https://api.webflow.com/v2/collections/6a1b5129b3db0157961c6077/items";
 const blogsUrl =
   "https://api.webflow.com/v2/collections/6a1b5077d9dab01e9054f1a1/items";
 const campussenUrl =
@@ -41,6 +43,7 @@ const stripHtml = (html) =>
 
 const HomeScreen = ({ navigation }) => {
   const [products, setProducts] = useState([]);
+  const [productCategories, setProductCategories] = useState([]);
   const [blogs, setBlogs] = useState([]);
   const [campussen, setCampussen] = useState([]);
   const [opleidingen, setOpleidingen] = useState([]);
@@ -73,14 +76,34 @@ const HomeScreen = ({ navigation }) => {
               item.product.fieldData?.["main-image"]?.url ||
               item.skus[0]?.fieldData?.["main-image"]?.url ||
               null,
-            category:
-              item.product.fieldData?.category?.[0] || "Geen categorie",
+            category: item.product.fieldData?.category?.[0] || "",
           })),
         );
       })
       .catch((error) => {
         console.log("Product fetch error:", error);
         setProducts([]);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch(productCategoriesUrl, {
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setProductCategories(
+          (data.items || []).map((item) => ({
+            id: item.id,
+            name: item.fieldData.name,
+          })),
+        );
+      })
+      .catch((error) => {
+        console.log("Product categories fetch error:", error);
+        setProductCategories([]);
       });
   }, []);
 
@@ -160,9 +183,23 @@ const HomeScreen = ({ navigation }) => {
       });
   }, []);
 
-  const productCategories = [
-    ...new Set(products.map((product) => product.category)),
-  ];
+  const getProductCategoryName = (categoryId) => {
+    const productCategory = productCategories.find(
+      (category) => category.id === categoryId,
+    );
+
+    return productCategory?.name || categoryId || "Geen categorie";
+  };
+
+  const visibleProductCategories =
+    productCategories.length > 0
+      ? productCategories
+      : [...new Set(products.map((product) => product.category))]
+          .filter((category) => category !== "")
+          .map((category) => ({
+            id: category,
+            name: category,
+          }));
 
   const filteredProducts = products.filter(
     (product) =>
@@ -234,8 +271,12 @@ const HomeScreen = ({ navigation }) => {
           style={styles.picker}
         >
           <Picker.Item label="Alle categorieën" value="" />
-          {productCategories.map((category) => (
-            <Picker.Item key={category} label={category} value={category} />
+          {visibleProductCategories.map((category) => (
+            <Picker.Item
+              key={category.id}
+              label={category.name}
+              value={category.id}
+            />
           ))}
         </Picker>
 
@@ -280,7 +321,12 @@ const HomeScreen = ({ navigation }) => {
             description={product.description}
             price={product.price}
             image={product.image}
-            onPress={() => navigation.navigate("Details", product)}
+            onPress={() =>
+              navigation.navigate("Details", {
+                ...product,
+                category: getProductCategoryName(product.category),
+              })
+            }
           />
         ))}
       </View>
