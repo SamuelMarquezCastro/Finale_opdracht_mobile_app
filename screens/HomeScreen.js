@@ -430,7 +430,10 @@ const HomeScreen = ({ navigation }) => {
         <Button title="Reset filters" color="#7aaa25" onPress={resetFilters} />
       </View>
 
-      <Text style={styles.sectionTitle}>Studiezoeker</Text>
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Studiezoeker</Text>
+        <Text style={styles.sectionPill}>{filteredRichtingen.length}</Text>
+      </View>
 
       {richtingenLoading && <Text style={styles.message}>Richtingen laden...</Text>}
 
@@ -450,7 +453,10 @@ const HomeScreen = ({ navigation }) => {
         />
       ))}
 
-      <Text style={styles.sectionTitle}>Producten</Text>
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Producten</Text>
+        <Text style={styles.sectionPill}>{sortedProducts.length}</Text>
+      </View>
 
       <View style={styles.grid}>
         {productsLoading && <Text style={styles.message}>Producten laden...</Text>}
@@ -477,7 +483,7 @@ const HomeScreen = ({ navigation }) => {
         ))}
       </View>
 
-      <View style={styles.switchRow}>
+      <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Nieuws</Text>
         <View style={styles.switchControl}>
           <Text style={styles.switchLabel}>Toon nieuws</Text>
@@ -532,7 +538,10 @@ const HomeScreen = ({ navigation }) => {
         </>
       )}
 
-      <Text style={styles.sectionTitle}>Campussen</Text>
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Campussen</Text>
+        <Text style={styles.sectionPill}>{filteredCampussen.length}</Text>
+      </View>
 
       {campussenLoading && <Text style={styles.message}>Campussen laden...</Text>}
 
@@ -630,8 +639,25 @@ const styles = StyleSheet.create({
     color: "#171717",
     fontSize: 22,
     fontWeight: "bold",
+  },
+
+  sectionHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     marginBottom: 15,
     marginTop: 10,
+  },
+
+  sectionPill: {
+    color: "#171717",
+    backgroundColor: "#b7e34a",
+    minWidth: 34,
+    textAlign: "center",
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 99,
+    fontWeight: "bold",
   },
 
   message: {
@@ -660,6 +686,9 @@ const styles = StyleSheet.create({
   switchControl: {
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "#fff",
+    borderRadius: 99,
+    paddingLeft: 12,
   },
 
   switchLabel: {
